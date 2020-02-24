@@ -1,7 +1,14 @@
-# Chatbot
-Simple chatbot app using LINE Messaging API.  
-Used Flask for web app handling and heroku for the server and backend.
+# Flask KitchenSink
 
-## Files and directory
-main.py: main file to be pushed to heroku server.  
-Flask-introduction: the directory which contains the introduction to Flask files.
+Sample bot using [Flask](http://flask.pocoo.org/)
+
+## Getting started
+
+```
+$ export LINE_CHANNEL_SECRET=YOUR_LINE_CHANNEL_SECRET
+$ export LINE_CHANNEL_ACCESS_TOKEN=YOUR_LINE_CHANNEL_ACCESS_TOKEN
+
+$ pip install -r requirements.txt
+
+$ python app.py
+```
