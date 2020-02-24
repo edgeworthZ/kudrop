@@ -1,53 +1,88 @@
-from flask import Flask, request, abort
-import os
+from flask import Flask, request
+import json
+import requests
 
-from linebot import (
-    LineBotApi, WebhookHandler
-)
-from linebot.exceptions import (
-    InvalidSignatureError
-)
-from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,
-)
+# ตรง YOURSECRETKEY ต้องนำมาใส่เองครับจะกล่าวถึงในขั้นตอนต่อๆ ไป
+global LINE_API_KEY
+# ห้ามลบคำว่า Bearer ออกนะครับเมื่อนำ access token มาใส่
+LINE_API_KEY = 'Bearer i1sVJnx19N2uqelufDprbHySs8hdPYnDtgP1NeFpd3fwMjmdSPSqzwh86wXPpxUCGiRSucjpnxaOIfV3Otcd662kXscktrKxOg9oJR7StLm+4d91oYVoWJrfHlSsXJtvOkbhiez8Jy5vRALD0QsC8QdB04t89/1O/w1cDnyilFU='
 
 app = Flask(__name__)
+ 
+@app.route('/')
+def index():
+    return 'This is chatbot server.'
+@app.route('/bot', methods=['POST'])
 
-#環境変数取得
-YOUR_CHANNEL_ACCESS_TOKEN = os.environ["i1sVJnx19N2uqelufDprbHySs8hdPYnDtgP1NeFpd3fwMjmdSPSqzwh86wXPpxUCGiRSucjpnxaOIfV3Otcd662kXscktrKxOg9oJR7StLm+4d91oYVoWJrfHlSsXJtvOkbhiez8Jy5vRALD0QsC8QdB04t89/1O/w1cDnyilFU="]
-YOUR_CHANNEL_SECRET = os.environ["6d8a30ddb7073299e39424a40037c50d"]
+def bot():
+    # ข้อความที่ต้องการส่งกลับ
+    replyQueue = list()
+   
+    # ข้อความที่ได้รับมา
+    msg_in_json = request.get_json()
+    msg_in_string = json.dumps(msg_in_json)
+    
+    # Token สำหรับตอบกลับ (จำเป็นต้องใช้ในการตอบกลับ)
+    replyToken = msg_in_json["events"][0]['replyToken']
+    
+    # ส่วนนี้ดึงข้อมูลพื้นฐานออกมาจาก json (เผื่อ)
+    userID =  msg_in_json["events"][0]['source']['userId']
+    msgType =  msg_in_json["events"][0]['message']['type']
+    
+    # ตรวจสอบว่า ที่ส่งเข้ามาเป็น text รึป่าว (อาจเป็น รูป, location อะไรแบบนี้ได้ครับ)
+    # แต่ก็สามารถประมวลผลข้อมูลประเภทอื่นได้นะครับ
+    # เช่น ถ้าส่งมาเป็น location ทำการดึง lat long ออกมาทำบางอย่าง เป็นต้น
+    if msgType != 'text':
+        reply(replyToken, ['Only text is allowed.'])
+        return 'OK',200
+    
+    # ตรงนี้ต้องแน่ใจว่า msgType เป็นประเภท text ถึงเรียกได้ครับ 
+    # lower เพื่อให้เป็นตัวพิมพ์เล็ก strip เพื่อนำช่องว่างหัวท้ายออก ครับ
+    text = msg_in_json["events"][0]['message']['text'].lower().strip()
+    
+    # ตัวอย่างการทำให้ bot ถาม-ตอบได้ แบบ exact match
+    # response_dict = {'สวัสดี':'สวัสดีครับ'}
+    # if text in response_dict:
+    #     replyQueue.append(reponse_dict[text])
+    # else:
+    #     replyQueue.append('ไม่รู้ว่าจะตอบอะไรดี TT')
+       
+    # ตัวอย่างการทำให้ bot ถาม-ตอบได้ แบบ non-exact match
+    # โดยที่มี method ชื่อ find_closest_sentence ที่ใช้การเปรียบเทียบประโยค
+    # เพื่อค้นหาประโยคที่ใกล้เคียงที่สุด อาจใช้เรื่องของ word embedding มาใช้งานได้ครับ
+    # simple sentence embeddings --> https://openreview.net/pdf?id=SyK00v5xx
+    # response_dict = {'สวัสดี':'สวัสดีครับ'}
+    # closest = find_closest_sentence(response_dict, text)
+    # replyQueue.append(reponse_dict[closest])
+   
+    # ตอบข้อความ "นี่คือรูปแบบข้อความที่รับส่ง" กลับไป
+    replyQueue.append('นี่คือรูปแบบข้อความที่รับส่ง')
+    
+    # ทดลอง Echo ข้อความกลับไปในรูปแบบที่ส่งไปมา (แบบ json)
+    replyQueue.append(msg_in_string)
+    reply(replyToken, replyQueue[:5])
+    
+    return 'OK', 200
+ 
+def reply(replyToken, textList):
+    # Method สำหรับตอบกลับข้อความประเภท text กลับครับ เขียนแบบนี้เลยก็ได้ครับ
+    LINE_API = 'https://api.line.me/v2/bot/message/reply'
+    headers = {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': LINE_API_KEY
+    }
+    msgs = []
+    for text in textList:
+        msgs.append({
+            "type":"text",
+            "text":text
+        })
+    data = json.dumps({
+        "replyToken":replyToken,
+        "messages":msgs
+    })
+    requests.post(LINE_API, headers=headers, data=data)
+    return
 
-line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
-handler = WebhookHandler(YOUR_CHANNEL_SECRET)
-
-@app.route("/")
-def hello_world():
-    return "hello world!"
-
-@app.route("/callback", methods=['POST'])
-def callback():
-    # get X-Line-Signature header value
-    signature = request.headers['X-Line-Signature']
-
-    # get request body as text
-    body = request.get_data(as_text=True)
-    app.logger.info("Request body: " + body)
-
-    # handle webhook body
-    try:
-        handler.handle(body, signature)
-    except InvalidSignatureError:
-        abort(400)
-
-    return 'OK'
-
-@handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=event.message.text))
-
-if __name__ == "__main__":
-#    app.run()
-    port = int(os.getenv("PORT"))
-    app.run(host="0.0.0.0", port=port)
+if __name__ == '__main__':
+    app.run()
