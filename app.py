@@ -37,9 +37,14 @@ def callback():
 def handle_text_message(event):
     text = event.message.text #message from user
 
-    line_bot_api.reply_message(
+    if any(i.isdigit() for i in text):
+        line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=text)) #reply the same message from user
+        TextSendMessage(text='ควาย คะแนนแค่นี้มึงไปดรอปเหอะ')) #reply the same message from user
+    else:
+        line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text='พิมพ์ห่าไร กุอ่านลายมือมึงไม่ออก')) #reply the same message from user
     
 
 import os
