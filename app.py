@@ -1,17 +1,3 @@
-# -*- coding: utf-8 -*-
-
-#  Licensed under the Apache License, Version 2.0 (the "License"); you may
-#  not use this file except in compliance with the License. You may obtain
-#  a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-#  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-#  License for the specific language governing permissions and limitations
-#  under the License.
-
 from __future__ import unicode_literals
 
 import datetime
@@ -51,15 +37,9 @@ from linebot.models import (
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_host=1, x_proto=1)
 
-# get channel_secret and channel_access_token from your environment variable
-channel_secret = os.getenv('LINE_CHANNEL_SECRET', None)
-channel_access_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
-if channel_secret is None or channel_access_token is None:
-    print('Specify LINE_CHANNEL_SECRET and LINE_CHANNEL_ACCESS_TOKEN as environment variables.')
-    sys.exit(1)
+line_bot_api = LineBotApi('i1sVJnx19N2uqelufDprbHySs8hdPYnDtgP1NeFpd3fwMjmdSPSqzwh86wXPpxUCGiRSucjpnxaOIfV3Otcd662kXscktrKxOg9oJR7StLm+4d91oYVoWJrfHlSsXJtvOkbhiez8Jy5vRALD0QsC8QdB04t89/1O/w1cDnyilFU=') #Your Channel Access Token
+handler = WebhookHandler('6d8a30ddb7073299e39424a40037c50d') #Your Channel Secret
 
-line_bot_api = LineBotApi('i1sVJnx19N2uqelufDprbHySs8hdPYnDtgP1NeFpd3fwMjmdSPSqzwh86wXPpxUCGiRSucjpnxaOIfV3Otcd662kXscktrKxOg9oJR7StLm+4d91oYVoWJrfHlSsXJtvOkbhiez8Jy5vRALD0QsC8QdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('6d8a30ddb7073299e39424a40037c50d')
 
 static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 
