@@ -35,14 +35,9 @@ from linebot.models import (
     ImageSendMessage)
 
 app = Flask(__name__)
-app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_host=1, x_proto=1)
 
 line_bot_api = LineBotApi('i1sVJnx19N2uqelufDprbHySs8hdPYnDtgP1NeFpd3fwMjmdSPSqzwh86wXPpxUCGiRSucjpnxaOIfV3Otcd662kXscktrKxOg9oJR7StLm+4d91oYVoWJrfHlSsXJtvOkbhiez8Jy5vRALD0QsC8QdB04t89/1O/w1cDnyilFU=') #Your Channel Access Token
 handler = WebhookHandler('6d8a30ddb7073299e39424a40037c50d') #Your Channel Secret
-
-
-static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
-
 
 # function for create tmp dir for download content
 def make_static_tmp_dir():
@@ -53,7 +48,6 @@ def make_static_tmp_dir():
             pass
         else:
             raise
-
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -67,11 +61,6 @@ def callback():
     # handle webhook body
     try:
         handler.handle(body, signature)
-    except LineBotApiError as e:
-        print("Got exception from LINE Messaging API: %s\n" % e.message)
-        for m in e.error.details:
-            print("  %s: %s" % (m.property, m.message))
-        print("\n")
     except InvalidSignatureError:
         abort(400)
 
@@ -652,14 +641,4 @@ def send_static_content(path):
 
 
 if __name__ == "__main__":
-    arg_parser = ArgumentParser(
-        usage='Usage: python ' + __file__ + ' [--port <port>] [--help]'
-    )
-    arg_parser.add_argument('-p', '--port', type=int, default=8000, help='port')
-    arg_parser.add_argument('-d', '--debug', default=False, help='debug')
-    options = arg_parser.parse_args()
-
-    # create tmp dir for download content
-    make_static_tmp_dir()
-
-    app.run(debug=options.debug, port=options.port)
+    app.run(host='0.0.0.0',port=os.environ['PORT'])
