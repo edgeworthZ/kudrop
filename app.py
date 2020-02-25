@@ -75,10 +75,10 @@ def handle_text_message(event):
 
 @handler.add(FollowEvent)
 def handle_follow(event):
-    app.logger.info("Got Follow event:" + event.source.user_id)
-    line_bot_api.reply_message(
-        event.reply_token, TextSendMessage(text='Got follow event'))
-    row = ['NewID','NewUser','None','None']
+    #app.logger.info("Got Follow event:" + event.source.user_id)
+    profile = line_bot_api.get_profile(event.source.user_id)
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(text='ขอบคุณที่แอด กุเก็บข้อมูลทุกอย่างของมึงเข้าเซิร์ฟเรียบร้อย555555'))
+    row = [profile.user_id,profile.display_name,profile.picture_url]
     sheet.append_row(row)
 
 import os
