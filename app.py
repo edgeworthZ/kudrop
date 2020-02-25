@@ -13,15 +13,8 @@ from linebot.models import (
 
 
 # use creds to create a client to interact with the Google Drive API
-
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-
-scope = ['https://spreadsheets.google.com/feeds',
-         'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
-client = gspread.authorize(creds)
-sheet = client.open("KUDrop").sheet1
 
 app = Flask(__name__)
 
@@ -61,6 +54,11 @@ def handle_text_message(event):
 @handler.add(FollowEvent)
 def handle_follow(event):
     app.logger.info("Got Follow event:" + event.source.user_id)
+    scope = ['https://spreadsheets.google.com/feeds',
+         'https://www.googleapis.com/auth/drive']
+    creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
+    client = gspread.authorize(creds)
+    sheet = client.open("KUDrop").sheet1
     row = ['NewID','NewUser','None','None']
     sheet.append_row(row)
     line_bot_api.reply_message(
