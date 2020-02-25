@@ -64,11 +64,7 @@ def callback():
 def handle_text_message(event):
     text = event.message.text #message from user
 
-    if any(i.isdigit() for i in text and len(text) != 10):
-        line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text='ควาย คะแนนแค่นี้มึงไปดรอปเหอะ'))
-    elif all(i.isdigit() for i in text and len(text) == 10): # Input student id
+    if all(i.isdigit() for i in text) and len(text) == 10: # Input student id
         profile = line_bot_api.get_profile(event.source.user_id)
         x = sheet.row_count
         while x > 0:
