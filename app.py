@@ -38,8 +38,11 @@ def handle_text_message(event):
     text = event.message.text #message from user
     
     if text == 'profile':
+        line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Your text is profile'))
         if isinstance(event.source, SourceUser):
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Source is user'))
             profile = line_bot_api.get_profile(event.source.user_id)
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Obtained profile'))
             line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(text='Display name: ' + profile.display_name),
@@ -47,6 +50,7 @@ def handle_text_message(event):
                 ]
             )
         else:
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Source is not user'))
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text="Bot can't use profile API without user ID"))
@@ -54,11 +58,11 @@ def handle_text_message(event):
     elif any(i.isdigit() for i in text):
         line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text='ควาย คะแนนแค่นี้มึงไปดรอปเหอะ')) #reply the same message from user
+        TextSendMessage(text='ควาย คะแนนแค่นี้มึงไปดรอปเหอะ'))
     else:
         line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text='พิมพ์ห่าไร กุอ่านลายมือมึงไม่ออก')) #reply the same message from user
+        TextSendMessage(text='พิมพ์ห่าไร กุอ่านลายมือมึงไม่ออก'))
     
 
 import os
