@@ -64,7 +64,7 @@ def callback():
 def handle_text_message(event):
     text = event.message.text #message from user
 
-    if any(i.isdigit() for i in text):
+    if any(i.isdigit() for i in text and len(text) != 10):
         line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text='ควาย คะแนนแค่นี้มึงไปดรอปเหอะ'))
