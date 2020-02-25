@@ -36,8 +36,22 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     text = event.message.text #message from user
-
-    if any(i.isdigit() for i in text):
+    
+    if text == 'profile':
+        if isinstance(event.source, SourceUser):
+            profile = line_bot_api.get_profile(event.source.user_id)
+            line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(text='Display name: ' + profile.display_name),
+                    TextSendMessage(text='Status message: ' + str(profile.status_message))
+                ]
+            )
+        else:
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="Bot can't use profile API without user ID"))
+    
+    elif any(i.isdigit() for i in text):
         line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text='ควาย คะแนนแค่นี้มึงไปดรอปเหอะ')) #reply the same message from user
