@@ -54,15 +54,13 @@ def handle_text_message(event):
 @handler.add(FollowEvent)
 def handle_follow(event):
     app.logger.info("Got Follow event:" + event.source.user_id)
-    scope = ['https://spreadsheets.google.com/feeds',
-         'https://www.googleapis.com/auth/drive']
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(text='Got follow event'))
+    scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
     creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
     client = gspread.authorize(creds)
     sheet = client.open("KUDrop").sheet1
     row = ['NewID','NewUser','None','None']
     sheet.append_row(row)
-    line_bot_api.reply_message(
-        event.reply_token, TextSendMessage(text='Got follow event'))
 
 import os
 if __name__ == "__main__":
