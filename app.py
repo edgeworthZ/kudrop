@@ -64,8 +64,19 @@ def callback():
 def handle_text_message(event):
     text = event.message.text #message from user
 
-    if all(i.isdigit() for i in text) and len(text) == 10: # Input student id
+    if any(i.isdigit() for i in text and len(text) != 10):
+        line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text='ควาย คะแนนแค่นี้มึงไปดรอปเหอะ'))
+    elif all(i.isdigit() for i in text and len(text) == 10): # Input student id
         profile = line_bot_api.get_profile(event.source.user_id)
+        x = sheet.row_count
+        while x > 0:
+           row = sheet.row_values(x, value_render_option='UNFORMATTED_VALUE')                    
+           if row[0] == event.source.user_id: #replace name by the desired keyword
+              row[3] = text
+              break
+           x = x - 1
         row = [profile.user_id,profile.display_name,profile.picture_url,text]
         sheet.append_row(row)
         line_bot_api.reply_message(
