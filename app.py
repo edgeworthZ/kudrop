@@ -74,7 +74,7 @@ def handle_text_message(event):
               break
            x = x - 1"""
         
-        cell = worksheet.find(event.source.user_id)
+        cell = sheet.find(event.source.user_id)
         line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text='พบข้อมูลที่'+cell.row+cell.col+'เชื่อมต่อ Line กับ รหัสนิสิตสำเร็จ นอนรอดรอปได้เลย'))
