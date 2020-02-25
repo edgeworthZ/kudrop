@@ -66,18 +66,18 @@ def handle_text_message(event):
 
     if all(i.isdigit() for i in text) and len(text) == 10: # Input student id
         profile = line_bot_api.get_profile(event.source.user_id)
-        x = sheet.row_count
+        """x = sheet.row_count
         while x > 0:
            row = sheet.row_values(x, value_render_option='UNFORMATTED_VALUE')                    
            if row[0] == event.source.user_id: #replace name by the desired keyword
               row[3] = text
               break
-           x = x - 1
-        row = [profile.user_id,profile.display_name,profile.picture_url,text]
-        sheet.append_row(row)
+           x = x - 1"""
+        
+        cell = worksheet.find(event.source.user_id)
         line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text='เชื่อมต่อ Line กับ รหัสนิสิตสำเร็จ นอนรอดรอปได้เลย'))
+        TextSendMessage(text='พบข้อมูลที่'+cell.row+cell.col+'เชื่อมต่อ Line กับ รหัสนิสิตสำเร็จ นอนรอดรอปได้เลย'))
     else:
         line_bot_api.reply_message(
         event.reply_token,
