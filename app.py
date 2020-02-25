@@ -40,8 +40,9 @@ def handle_text_message(event):
     
     if text == 'profile':
         line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Your text is profile'))
-        line_bot_api.reply_message(event.reply_token,TextSendMessage(text=userid))
         line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Your text is profile2'))
+        line_bot_api.reply_message(event.reply_token,TextSendMessage(text=userid))
+        line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Your text is profile3'))
         profile = line_bot_api.get_profile(event.source.user_id)
         line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Obtained profile'))
         line_bot_api.reply_message(
