@@ -39,21 +39,14 @@ def handle_text_message(event):
     
     if text == 'profile':
         line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Your text is profile'))
-        if isinstance(event.source, SourceUser):
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Source is user'))
-            profile = line_bot_api.get_profile(event.source.user_id)
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Obtained profile'))
-            line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(text='Display name: ' + profile.display_name),
-                    TextSendMessage(text='Status message: ' + str(profile.status_message))
-                ]
-            )
-        else:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Source is not user'))
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="Bot can't use profile API without user ID"))
+        profile = line_bot_api.get_profile(event.source.user_id)
+        line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Obtained profile'))
+        line_bot_api.reply_message(
+            event.reply_token, [
+            TextSendMessage(text='Display name: ' + profile.display_name),
+            TextSendMessage(text='Status message: ' + str(profile.status_message))
+            ]
+        )
     
     elif any(i.isdigit() for i in text):
         line_bot_api.reply_message(
