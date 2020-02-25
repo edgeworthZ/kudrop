@@ -67,11 +67,18 @@ def handle_text_message(event):
     if any(i.isdigit() for i in text):
         line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text='ควาย คะแนนแค่นี้มึงไปดรอปเหอะ')) #reply the same message from user
+        TextSendMessage(text='ควาย คะแนนแค่นี้มึงไปดรอปเหอะ'))
+    elif all(i.isdigit() for i in text and len(text) == 10): # Input student id
+        profile = line_bot_api.get_profile(event.source.user_id)
+        row = [profile.user_id,profile.display_name,profile.picture_url,text]
+        sheet.append_row(row)
+        line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text='เชื่อมต่อ Line กับ รหัสนิสิตสำเร็จ นอนรอดรอปได้เลย'))
     else:
         line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text='พิมพ์ห่าไร กุอ่านลายมือมึงไม่ออก')) #reply the same message from user
+        TextSendMessage(text='พิมพ์ห่าไร กุอ่านลายมือมึงไม่ออก'))
 
 @handler.add(FollowEvent)
 def handle_follow(event):
