@@ -78,8 +78,16 @@ def handle_text_message(event):
         line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text='เชื่อมต่อ Line ของคุณ'+profile.display_name+' กับรหัสนิสิตสำเร็จ นอนรอดรอปได้เลย'))
-    elif text == 'เขียนแบบ':
+    elif 'เขียนแบบ' in text:
         line_bot_api.broadcast(TextSendMessage(text='เขียนแบบแม่งมึนสัสๆ'))
+    elif 'เกรด' in text:
+        cell = sheet.find(event.source.user_id)
+        score = sheet.cell(cell.row, cell.col+4).value
+        regVal = sheet.cell(cell.row, cell.col+5).value
+        if ress != 1:
+            TextSendMessage(text='กากสัสไอ้คุณ '+profile.display_name+' มึงได้'+score+'คะแนนเอง ไปดรอปเหอะ'))
+        else:
+            TextSendMessage(text='มึงได้'+score+'คะแนน ก็ใช้ได้อยู่'))
     else:
         msg = dialogues[len(text)%len(dialogues)]
         line_bot_api.reply_message(
