@@ -37,6 +37,7 @@ scope = ['https://spreadsheets.google.com/feeds',
 creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
 client = gspread.authorize(creds)
 sheet = client.open("KUDrop").sheet1
+logSheet = client.open("KUDrop").sheet2
 
 dialogues = ['หน้าหี','ประยุทธ์หัวควย','ประยวยหัวคุด']
 
@@ -65,9 +66,13 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     text = event.message.text #message from user
+    
+    # users' reply log
+    profile = line_bot_api.get_profile(event.source.user_id)
+    row = [profile.user_id,profile.display_name,text]
+    logSheet.append_row(row)
 
     if all(i.isdigit() for i in text) and len(text) == 10: # Input student id
-        profile = line_bot_api.get_profile(event.source.user_id)
         cell = sheet.find(event.source.user_id)
         sheet.update_cell(cell.row,cell.col+3, text) # รหัสนิสิตอยู่คอลัมน์ที่ 3 ใน google sheet
         line_bot_api.reply_message(
