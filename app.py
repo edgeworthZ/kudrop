@@ -38,7 +38,7 @@ creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', s
 client = gspread.authorize(creds)
 sheet = client.open("KUDrop").sheet1
 
-dialogues = ['เฟี้ยวว่ะ','จะสื่อไรอ่ะ','กุไม่เชื่อ','ตอแหลล']
+dialogues = ['ฮาร์ดแวร์หน้าหี']
 
 app = Flask(__name__)
 
