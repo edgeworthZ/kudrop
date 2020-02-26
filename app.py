@@ -73,6 +73,8 @@ def handle_text_message(event):
         line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text='เชื่อมต่อ Line ของคุณ'+profile.display_name+' กับรหัสนิสิตสำเร็จ นอนรอดรอปได้เลย'))
+    elif text == 'เขียนแบบ':
+        line_bot_api.broadcast(TextSendMessage(text='เขียนแบบแม่งมึนสัสๆ'))
     else:
         msg = dialogues[len(text)%len(dialogues)]
         line_bot_api.reply_message(
