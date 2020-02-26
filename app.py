@@ -84,7 +84,7 @@ def handle_text_message(event):
         cell = sheet.find(event.source.user_id)
         score = sheet.cell(cell.row, cell.col+4).value
         regVal = sheet.cell(cell.row, cell.col+5).value
-        if ress != 1:
+        if regVal != 1:
             line_bot_api.reply_message(event.reply_token,
             TextSendMessage(text='กากสัสไอ้คุณ '+profile.display_name+' มึงได้'+score+'คะแนนเอง ไปดรอปเหอะ'))
         else:
