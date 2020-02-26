@@ -38,6 +38,8 @@ creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', s
 client = gspread.authorize(creds)
 sheet = client.open("KUDrop").sheet1
 
+dialogue = ['เฟี้ยวว่ะ','จะสื่อไรอ่ะ','กุไม่เชื่อ','ตอแหลล']
+
 app = Flask(__name__)
 
 line_bot_api = LineBotApi('i1sVJnx19N2uqelufDprbHySs8hdPYnDtgP1NeFpd3fwMjmdSPSqzwh86wXPpxUCGiRSucjpnxaOIfV3Otcd662kXscktrKxOg9oJR7StLm+4d91oYVoWJrfHlSsXJtvOkbhiez8Jy5vRALD0QsC8QdB04t89/1O/w1cDnyilFU=') #Your Channel Access Token
@@ -72,9 +74,10 @@ def handle_text_message(event):
         event.reply_token,
         TextSendMessage(text='เชื่อมต่อ Line ของคุณ'+profile.display_name+' กับรหัสนิสิตสำเร็จ นอนรอดรอปได้เลย'))
     else:
+        msg = dialogues[len(text)%len(dialogues)]
         line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text='พิมพ์ห่าไร กุอ่านลายมือมึงไม่ออก'))
+        TextSendMessage(text=msg))
 
 @handler.add(FollowEvent)
 def handle_follow(event):
