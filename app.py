@@ -78,7 +78,7 @@ def handle_text_message(event):
         line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text='เชื่อมต่อ Line ของคุณ'+profile.display_name+' กับรหัสนิสิตสำเร็จ นอนรอดรอปได้เลย'))
-    elif 'เขียนแบบ' in text:
+    elif 'เขียนแบบเป็นไง' in text:
         line_bot_api.broadcast(TextSendMessage(text='เขียนแบบแม่งมึนสัสๆ'))
     elif 'คะแนน' in text:
         cell = sheet.find(event.source.user_id)
