@@ -88,7 +88,7 @@ def handle_text_message(event):
         regVal = sheet.cell(cell.row, cell.col+5).value
         if regVal != 1:
             line_bot_api.reply_message(event.reply_token,
-            TextSendMessage(text='กากสัสไอ้คุณ '+displayName+' เขียนแบบมึงได้'+score+'คะแนนเอง ไปดรอปเหอะ'))
+            TextSendMessage(text='กากสัสไอ้คุณ'+displayName+' เขียนแบบมึงได้'+score+'คะแนนเอง ไปดรอปเหอะ'))
         else:
             line_bot_api.reply_message(
             event.reply_token,
