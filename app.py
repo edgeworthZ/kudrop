@@ -89,17 +89,16 @@ def handle_text_message(event):
         if regVal != 1:
             line_bot_api.reply_message(event.reply_token,
             TextSendMessage(text='กากสัสไอ้คุณ'+displayName+' เขียนแบบมึงได้'+score+'คะแนนเอง ไปดรอปเหอะ'))
+            url = 'https://www.thairath.co.th/media/HCtHFA7ele6Q2dULkStXvrq4Q8ntVDjDlDSWvVNtzOMMr0257UircvOLeoaRlH4IFx.jpg'
+            app.logger.info("url=" + url)
+            line_bot_api.push_message(event.source.user_id, [ImageSendMessage(url, url),])
         else:
             line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text='เขียนแบบมึงได้'+score+'คะแนน ก็ใช้ได้อยู่'))
             url = 'https://thestandard.co/wp-content/uploads/2019/03/%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A2%E0%B8%B8%E0%B8%97%E0%B8%98%E0%B9%8C-%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C%E0%B9%82%E0%B8%AD%E0%B8%8A%E0%B8%B2-.jpg'
             app.logger.info("url=" + url)
-            line_bot_api.push_message(
-            event.source.user_id, [
-                ImageSendMessage(url, url),
-            ]
-        )
+            line_bot_api.push_message(event.source.user_id, [ImageSendMessage(url, url),])
     else:
         msg = dialogues[len(text)%len(dialogues)]
         line_bot_api.reply_message(
