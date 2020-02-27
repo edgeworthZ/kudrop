@@ -80,17 +80,19 @@ def handle_text_message(event):
         TextSendMessage(text='เชื่อมต่อ Line ของคุณ'+profile.display_name+' กับรหัสนิสิตสำเร็จ นอนรอดรอปได้เลย'))
     elif 'เขียนแบบ' in text:
         line_bot_api.broadcast(TextSendMessage(text='เขียนแบบแม่งมึนสัสๆ'))
-    elif 'เกรด' in text:
+    elif 'คะแนน' in text:
         cell = sheet.find(event.source.user_id)
+        nickname = sheet.cell(cell.row, cell.col+2).value
+        displayName = nickname if len(nickname > 0) else profile.display_name
         score = sheet.cell(cell.row, cell.col+4).value
         regVal = sheet.cell(cell.row, cell.col+5).value
         if regVal != 1:
             line_bot_api.reply_message(event.reply_token,
-            TextSendMessage(text='กากสัสไอ้คุณ '+profile.display_name+' มึงได้'+score+'คะแนนเอง ไปดรอปเหอะ'))
+            TextSendMessage(text='กากสัสไอ้คุณ '+displayName+' เขียนแบบมึงได้'+score+'คะแนนเอง ไปดรอปเหอะ'))
         else:
             line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text='มึงได้'+score+'คะแนน ก็ใช้ได้อยู่'))
+            TextSendMessage(text='เขียนแบบมึงได้'+score+'คะแนน ก็ใช้ได้อยู่'))
             url = 'https://thestandard.co/wp-content/uploads/2019/03/%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A2%E0%B8%B8%E0%B8%97%E0%B8%98%E0%B9%8C-%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C%E0%B9%82%E0%B8%AD%E0%B8%8A%E0%B8%B2-.jpg'
             app.logger.info("url=" + url)
             line_bot_api.push_message(
