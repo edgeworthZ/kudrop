@@ -85,7 +85,7 @@ def handle_text_message(event):
         nickname = sheet.cell(cell.row, cell.col+2).value
         displayName = nickname if len(nickname) > 0 else profile.display_name
         score = sheet.cell(cell.row, cell.col+4).value
-        regVal = sheet.cell(cell.row, cell.col+5).value
+        regVal = int(sheet.cell(cell.row, cell.col+5).value)
         if regVal != 1:
             line_bot_api.reply_message(event.reply_token,
             TextSendMessage(text='กากสัสไอ้คุณ'+displayName+' เขียนแบบมึงได้'+score+'คะแนนเอง ไปดรอปเหอะ'))
