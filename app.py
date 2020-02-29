@@ -32,6 +32,8 @@ from linebot.models import (
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+import ast
+
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
@@ -78,27 +80,27 @@ def handle_text_message(event):
         line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text='เชื่อมต่อ Line ของคุณ'+profile.display_name+' กับรหัสนิสิตสำเร็จ นอนรอดรอปได้เลย'))
-    elif 'เขียนแบบเป็นไง' in text:
-        line_bot_api.broadcast(TextSendMessage(text='เขียนแบบแม่งมึนสัสๆ'))
-    elif 'คะแนน' in text:
+    elif all(i.isdigit() for i in text) and len(text) == 8: # Input student id
         cell = sheet.find(event.source.user_id)
         nickname = sheet.cell(cell.row, cell.col+2).value
         displayName = nickname if len(nickname) > 0 else profile.display_name
-        score = sheet.cell(cell.row, cell.col+4).value
-        regVal = int(sheet.cell(cell.row, cell.col+5).value)
-        if regVal != 1:
-            line_bot_api.reply_message(event.reply_token,
-            TextSendMessage(text='กากสัสไอ้คุณ'+displayName+' เขียนแบบมึงได้'+score+'คะแนนเอง ไปดรอปเหอะ'))
-            url = 'https://www.thairath.co.th/media/HCtHFA7ele6Q2dULkStXvrq4Q8ntVDjDlDSWvVNtzOMMr0257UircvOLeoaRlH4IFx.jpg'
-            app.logger.info("url=" + url)
-            line_bot_api.push_message(event.source.user_id, [ImageSendMessage(url, url),])
-        else:
+        rawDataDict = sheet.cell(cell.row, cell.col+4).value
+        dataDict = ast.literal_eval(rawDataDict)
+        if dataDict[text]['Grade'] != 'F':
             line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text='เขียนแบบมึงได้'+score+'คะแนน ก็ใช้ได้อยู่'))
+            TextSendMessage(text='เขียนแบบมึงได้'+dataDict[text]['Score']+'คะแนน ก็ใช้ได้อยู่'))
             url = 'https://thestandard.co/wp-content/uploads/2019/03/%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A2%E0%B8%B8%E0%B8%97%E0%B8%98%E0%B9%8C-%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C%E0%B9%82%E0%B8%AD%E0%B8%8A%E0%B8%B2-.jpg'
             app.logger.info("url=" + url)
             line_bot_api.push_message(event.source.user_id, [ImageSendMessage(url, url),])
+        else:
+            line_bot_api.reply_message(event.reply_token,
+            TextSendMessage(text='กากสัสไอ้คุณ'+displayName+' เขียนแบบมึงได้'+dataDict[text]['Score']+'คะแนนเอง ไปดรอปเหอะ'))
+            url = 'https://www.thairath.co.th/media/HCtHFA7ele6Q2dULkStXvrq4Q8ntVDjDlDSWvVNtzOMMr0257UircvOLeoaRlH4IFx.jpg'
+            app.logger.info("url=" + url)
+            line_bot_api.push_message(event.source.user_id, [ImageSendMessage(url, url),])
+    elif 'เขียนแบบเป็นไง' in text:
+        line_bot_api.broadcast(TextSendMessage(text='เขียนแบบแม่งมึนสัสๆ'))
     else:
         msg = dialogues[len(text)%len(dialogues)]
         line_bot_api.reply_message(
