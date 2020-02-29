@@ -10,6 +10,11 @@ KUDrop is a chatbot for helping Kasetsart University students decide whether it'
 * AI based on machine learning algorithm with logistic regression for predicting the chances of failing each subject. 
 
 ## Usage
+### Launch GradePredictorGUI
+```
+python myapp.py
+```
+
 ### Requirements
 
 python >= 3.6
