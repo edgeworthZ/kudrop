@@ -100,8 +100,8 @@ def handle_text_message(event):
             url = 'https://www.thairath.co.th/media/HCtHFA7ele6Q2dULkStXvrq4Q8ntVDjDlDSWvVNtzOMMr0257UircvOLeoaRlH4IFx.jpg'
             app.logger.info("url=" + url)
             line_bot_api.push_message(event.source.user_id, [ImageSendMessage(url, url),])
-    elif 'เตือนทุกคน' in text:
-        line_bot_api.broadcast(TextSendMessage(text='ใครซักคนส่งข้อความมาเตือนคุณ!'))
+    elif 'ใครบริหารประเทศ' in text:
+        line_bot_api.broadcast(TextSendMessage(text='ใครคือนายกประเทศเรา?'))
     else:
         #msg = dialogues[len(text)%len(dialogues)]
         msg = dialoguemodule.converse(text)
