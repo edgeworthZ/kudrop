@@ -34,6 +34,9 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 import ast
 
+from dialoguemodule import DialogueModule
+dialoguemodule = DialogueModule()
+
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
@@ -99,10 +102,11 @@ def handle_text_message(event):
             url = 'https://www.thairath.co.th/media/HCtHFA7ele6Q2dULkStXvrq4Q8ntVDjDlDSWvVNtzOMMr0257UircvOLeoaRlH4IFx.jpg'
             app.logger.info("url=" + url)
             line_bot_api.push_message(event.source.user_id, [ImageSendMessage(url, url),])
-    elif 'เขียนแบบเป็นไง' in text:
-        line_bot_api.broadcast(TextSendMessage(text='เขียนแบบแม่งมึนสัสๆ'))
+    elif 'เตือนทุกคน' in text:
+        line_bot_api.broadcast(TextSendMessage(text='ใครซักคนส่งข้อความมาเตือนคุณ!'))
     else:
-        msg = dialogues[len(text)%len(dialogues)]
+        #msg = dialogues[len(text)%len(dialogues)]
+        msg = dialoguemodule.converse(text)
         line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=msg))
