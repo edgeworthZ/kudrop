@@ -1,6 +1,6 @@
 # KUDrop
 
-KUDrop is a chatbot for helping Kasetsart University students decide whether it's a good idea for them to drop a course during the middle of semester.
+KUDrop is a chatbot for helping students decide whether it's a good idea for them to drop a course during the middle of semester.
 
 ## Features
 * Rule-based chatbot.
