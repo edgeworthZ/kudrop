@@ -81,12 +81,14 @@ def handle_text_message(event):
         line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text='เชื่อมต่อ Line ของคุณ'+profile.display_name+' กับรหัสนิสิตสำเร็จ นอนรอดรอปได้เลย'))
+        
     elif all(i.isdigit() for i in text) and len(text) == 8: # Input student id
         cell = sheet.find(event.source.user_id)
         nickname = sheet.cell(cell.row, cell.col+2).value
         displayName = nickname if len(nickname) > 0 else profile.display_name
         rawDataDict = sheet.cell(cell.row, cell.col+4).value
         dataDict = ast.literal_eval(rawDataDict)
+        
         if dataDict[text]['Grade'] != 'F':
             line_bot_api.reply_message(
             event.reply_token,
